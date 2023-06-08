@@ -1,0 +1,19 @@
+dn: dc=cdac,dc=in
+objectClass: top
+objectClass: dcObject
+objectClass: organization
+o: cdac in
+dc: cdac
+
+dn: cn=Manager,dc=cdac,dc=in
+objectClass: organizationalRole
+cn: Manager
+description: Directory Manager
+
+dn: ou=People,dc=cdac,dc=in
+objectClass: organizationalUnit
+ou: People
+
+dn: ou=Group,dc=cdac,dc=in
+objectClass: organizationalUnit
+ou: Group

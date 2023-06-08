@@ -1,0 +1,16 @@
+dn: uid=user1,ou=People,dc=cdac,dc=in
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+cn: user1
+sn: test
+userpassword: {SSHA}qiPF036kY5IaZ1bCBD3SrvRsoFSIrkwk
+loginShell: /bin/bash
+uidNumber: 1001
+gidNumber: 1001
+homeDirectory: /home/user1
+
+dn: cn=user1,ou=Group,dc=cdac,dc=in
+objectClass: posixGroup
+cn: user1
+gidNumber: 1001
