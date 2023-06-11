@@ -1,0 +1,82 @@
++++++++++++++++++++++++++ Kickstart Installation ++++++++++++++++++++++
+
+#python -c 'import crypt,getpass; \
+print(crypt.crypt(getpass.getpass(), \
+crypt.mksalt(crypt.METHOD_SHA512)))'
+
+
+Password:root
+$6$HjZEK4.i2hL/osFr$kR.jmqYcEvTdk95UDsVGjM5h7gx4PI/G4fnP13
+
+
+#mkdir /var/www/html/ks
+#vi /var/www/html/ks/centos7-ks.cfg              ---COPY THE FOLLOWING CONTENTS TO THIS FILE AND REPLACE THE PASS AND IP
+
+========================================================
+# create new
+install
+# automatically proceed for each steps
+autostep
+# reboot after installing
+reboot
+# encrypt algorithm
+auth --enableshadow --passalgo=sha512
+# installation source
+url --url=http://192.168.10.10/centos7/
+# install disk
+ignoredisk --only-use=sda
+# keyboard layouts
+keyboard --vckeymap=jp106 --xlayouts='jp','us'
+# system locale
+lang en_US.UTF-8
+# network settings
+network --bootproto=dhcp --ipv6=auto --activate --hostname=localhost
+# root password you generated above
+rootpw --iscrypted $6$HjZEK4.i2hL/osFr$kR.jmqYcEvTdk95UDsVGjM5h7gx4PI/G4fnP13N6qg3NWLIS8sHiFquuR/6fYAwhvvW75cGeJqZkqhhcEANjF
+# timezone
+timezone Asia/Tokyo --isUtc --nontp
+# bootloader's settings
+bootloader --location=mbr --boot-drive=sda
+# initialize all partition tables
+zerombr
+clearpart --all --initlabel
+# partitioning
+part /boot --fstype="xfs" --ondisk=sda --size=500
+part pv.10 --fstype="lvmpv" --ondisk=sda --size=51200
+volgroup VolGroup --pesize=4096 pv.10
+logvol / --fstype="xfs" --size=20480 --name=root --vgname=VolGroup
+logvol swap --fstype="swap" --size=4096 --name=swap --vgname=VolGroup
+%packages
+@core
+%end
+
+=======================================================
+
+
+#chmod 644 /var/www/html/ks/centos7-ks.cfg
+
+
+#vi /var/lib/tftpboot/pxelinux.cfg/default         --   Copy the following content to this file change the ip add 
+================================================
+# creating PXE defination
+
+timeout 100
+default menu.c32
+
+menu title ##kick##### PXE BOOT MENU ######
+label 1
+        menu label ^1) Install Centos 7
+        kernel centos7/vmlinuz
+        append initrd=centos7/initrd.img ks=http://192.168.10.10/ks/centos7-ks.cfg
+label 2
+        menu label ^2) Boot from local drive
+        localboot
+
+
+===================================================
+
+create a new VM with install later options 
+custom
+ram - 3gb
+rom 100gb
+processor - 2
